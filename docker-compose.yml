@@ -1,0 +1,44 @@
+version: "3.7"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: d4mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_MYSQL_PASSWORD}
+      MYSQL_PASSWORD: ${DB_MYSQL_PASSWORD}
+      MYSQL_USER: ${DB_MYSQL_USERNAME}
+      SERVICE_NAME: mysql
+    networks:
+      - d4
+
+  nginx:
+    image: nginx:alpine
+    container_name: dantob-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./www:/var/www
+      - ./nginx:/etc/nginx/conf.d/
+      - ./dhparam:/etc/nginx/dhparam
+      - ./certbot/conf/:/etc/nginx/ssl/
+      - ./certbot/data:/usr/share/nginx/html/letsencrypt
+    networks:
+      - d4
+
+  certbot:
+    image: certbot/certbot:latest
+    command: certonly --webroot --webroot-path=/usr/share/nginx/html/letsencrypt --email panjaitanandree@gmail.com --agree-tos --no-eff-email -d ta8.d4trpl19.net
+    volumes:
+      - ./certbot/conf/:/etc/letsencrypt
+      - ./certbot/logs/:/var/log/letsencrypt
+      - ./certbot/data:/usr/share/nginx/html/letsencrypt
+    networks:
+      - d4
+
+networks:
+  d4:
+    driver: bridge
