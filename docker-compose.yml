@@ -22,20 +22,36 @@ services:
       - "443:443"
     volumes:
       - ./www:/var/www
-      - ./nginx:/etc/nginx/conf.d/
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./nginx/sites-available/:/etc/nginx/sites-available/
       - ./dhparam:/etc/nginx/dhparam
       - ./certbot/conf/:/etc/nginx/ssl/
       - ./certbot/data:/usr/share/nginx/html/letsencrypt
+      - ./ta-10/staticfiles:/var/www/ta-10/staticfiles
     networks:
       - d4
 
   certbot:
     image: certbot/certbot:latest
-    command: certonly --webroot --webroot-path=/usr/share/nginx/html/letsencrypt --email panjaitanandree@gmail.com --agree-tos --no-eff-email -d socket08.d4trpl19.net 
+    command: certonly --webroot --webroot-path=/usr/share/nginx/html/letsencrypt --email panjaitanandree@gmail.com --agree-tos --no-eff-email -d socket08.d4trpl19.net
     volumes:
       - ./certbot/conf/:/etc/letsencrypt
       - ./certbot/logs/:/var/log/letsencrypt
       - ./certbot/data:/usr/share/nginx/html/letsencrypt
+    networks:
+      - d4
+
+  ta-10:
+    image: docker.pkg.github.com/andreejait/ta10:latest
+    container_name: ta-10-service
+    env_file:
+      - ta-10/.env
+    restart: always
+    volumes:
+      - ./ta-10/staticfiles:/ta10/static
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_ALLOWED_HOSTS=${DOMAIN}
     networks:
       - d4
 
