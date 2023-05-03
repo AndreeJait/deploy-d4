@@ -26,6 +26,7 @@ services:
       - ./www:/var/www
       - ./nginx/conf.d/:/etc/nginx/conf.d/
       - ./nginx/sites-available/:/etc/nginx/sites-available/
+      - ./nginx/sites-available/:/etc/nginx/sites-enabled/
       - ./dhparam:/etc/nginx/dhparam
       - ./certbot/conf/:/etc/nginx/ssl/
       - ./certbot/data:/usr/share/nginx/html/letsencrypt
