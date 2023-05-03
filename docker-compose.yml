@@ -17,6 +17,8 @@ services:
     image: nginx:alpine
     container_name: d4-nginx
     restart: unless-stopped
+    depends_on:
+      - ta-10
     ports:
       - "80:80"
       - "443:443"
