@@ -50,6 +50,8 @@ services:
     env_file:
       - ta-10/.env
     restart: always
+    ports:
+      - "3000:3000"
     volumes:
       - ./ta-10/staticfiles:/ta10/static
     environment:
