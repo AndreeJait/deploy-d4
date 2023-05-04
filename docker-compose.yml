@@ -31,6 +31,8 @@ services:
       - ./certbot/conf/:/etc/nginx/ssl/
       - ./certbot/data:/usr/share/nginx/html/letsencrypt
       - ./ta-10/staticfiles:/var/www/ta-10/staticfiles
+      - /home/ubuntu/ta-01/app/staticfiles:/var/www/ta-1/staticfiles
+      - /home/ubuntu/ta-01/app/mediafiles:/var/www/ta-1/mediafiles
     networks:
       - d4
 
